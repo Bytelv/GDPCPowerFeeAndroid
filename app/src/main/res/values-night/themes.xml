@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      应用主题（深色）。系统切到深色模式时，-night 资源生效，这里换用深色父主题，
+      同时颜色取自 values-night/colors.xml（同名覆盖）。
+      与浅色版一样显式锁定强调色与高亮色，避免 OEM 主题干扰。
+    -->
+    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorControlHighlight">@color/ripple_tint</item>
+        <item name="android:colorActivatedHighlight">@color/row_selected</item>
+        <item name="android:colorPressedHighlight">@color/row_pressed</item>
+        <item name="android:colorFocusedHighlight">@color/row_pressed</item>
+        <item name="android:colorLongPressedHighlight">@color/row_pressed</item>
+        <item name="android:colorMultiSelectHighlight">@color/row_selected</item>
+    </style>
+</resources>

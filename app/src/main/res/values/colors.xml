@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 电量状态色，与托盘程序 / 网页版的配色保持一致 -->
+    <!--
+      电量状态色：与托盘程序、网页版保持一致。
+      这四个名字是**跟着主题走的**（values-night 里有更亮的版本），用于界面内元素。
+      需要"任何主题下都长一样"的地方（桌面小组件背景、启动图标背景）请用下面的
+      widget_* / ic_bg_* 固定色。
+    -->
     <color name="level_ok">#1F7A45</color>
     <color name="level_warn">#B7791F</color>
     <color name="level_low">#C53030</color>
     <color name="level_unknown">#6B7A72</color>
 
-    <!-- 自适应图标的背景色（4 种状态各一个） -->
+    <!-- 启动图标背景：固定色，不随主题变化（桌面图标不该因深色模式变色） -->
     <color name="ic_bg_ok">#1F7A45</color>
     <color name="ic_bg_warn">#B7791F</color>
     <color name="ic_bg_low">#C53030</color>
     <color name="ic_bg_unknown">#6B7A72</color>
 
+    <!-- 小组件背景：同样固定色。小组件由桌面进程渲染，颜色若跟主题走会变得难以预期，
+         而且组件内文字是白色，需要足够深的底色来保证对比度 -->
+    <color name="widget_ok">#1F7A45</color>
+    <color name="widget_warn">#B7791F</color>
+    <color name="widget_low">#C53030</color>
+    <color name="widget_unknown">#6B7A72</color>
+
+    <!-- 语义化界面配色（浅色） -->
+    <color name="screen_bg">#F2F4F3</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="divider">#E3E8E5</color>
+    <color name="text_primary">#16211C</color>
     <color name="text_muted">#6B7A72</color>
 
-    <!-- 历史曲线用的颜色（浅色主题） -->
+    <!-- 强调色与高亮色：写死以防 OEM 主题（MIUI 上曾出现粉色高亮） -->
+    <color name="accent">#1F7A45</color>
+    <color name="ripple_tint">#331F7A45</color>
+    <color name="row_selected">#331F7A45</color>
+    <color name="row_pressed">#551F7A45</color>
+
+    <!-- 徽标与主按钮的文字色 -->
+    <color name="badge_text">#FFFFFFFF</color>
+    <color name="btn_primary_text">#FFFFFFFF</color>
+
+    <!-- 历史曲线 -->
     <color name="chart_axis">#E3E8E5</color>
     <color name="chart_area">#1F1F7A45</color>
 </resources>

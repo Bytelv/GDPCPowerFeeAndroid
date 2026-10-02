@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher_ok"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault.Light">
+        android:theme="@style/AppTheme">
 
         <!-- 主界面：本身不带 LAUNCHER 过滤器，桌面图标由下面 4 个别名提供（动态换图标的关键） -->
         <activity

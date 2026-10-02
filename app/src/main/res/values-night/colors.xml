@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      深色模式覆盖。只列需要变化的名字，其余自动回落到 values/colors.xml。
+      注意刻意**不覆盖** ic_bg_* 与 widget_*：启动图标与桌面小组件在任何主题下
+      都应保持同一套品牌色（小组件里是白字，需要足够深的底色保证对比度）。
+    -->
+
+    <!-- 状态色在深色底上要提亮，否则对比度不足 -->
+    <color name="level_ok">#3EA46A</color>
+    <color name="level_warn">#D2A24C</color>
+    <color name="level_low">#E06C6C</color>
+    <color name="level_unknown">#9AABA2</color>
+
+    <color name="screen_bg">#101614</color>
+    <color name="card_bg">#18211D</color>
+    <color name="divider">#26332D</color>
+    <color name="text_primary">#E8EFEB</color>
+    <color name="text_muted">#9AABA2</color>
+
+    <color name="accent">#3EA46A</color>
+    <color name="ripple_tint">#4D3EA46A</color>
+    <color name="row_selected">#4D3EA46A</color>
+    <color name="row_pressed">#663EA46A</color>
+
+    <!-- 深色下绿底用深色文字更清楚；徽标同理 -->
+    <color name="badge_text">#FF0B1512</color>
+    <color name="btn_primary_text">#FF0B1512</color>
+
+    <color name="chart_axis">#26332D</color>
+    <color name="chart_area">#333EA46A</color>
+</resources>

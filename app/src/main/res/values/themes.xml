@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      应用主题（浅色）。
+
+      这里显式指定了 colorAccent 与全部 *Highlight 颜色，原因是：
+      Theme.DeviceDefault 是"设备默认主题"，**OEM 会替换它的强调色**。
+      实测在 MIUI 上，Spinner 下拉行的按压高亮会变成品红色（粉色），
+      复选框勾选色也是 OEM 蓝——都是吃了 OEM 强调色的结果。
+      把这几项写死，外观就不再随厂商主题变化。
+    -->
+    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light">
+        <!-- 关掉系统"强制深色"：本应用自己提供了 -night 配色，不需要系统再改一遍 -->
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorControlHighlight">@color/ripple_tint</item>
+        <item name="android:colorActivatedHighlight">@color/row_selected</item>
+        <item name="android:colorPressedHighlight">@color/row_pressed</item>
+        <item name="android:colorFocusedHighlight">@color/row_pressed</item>
+        <item name="android:colorLongPressedHighlight">@color/row_pressed</item>
+        <item name="android:colorMultiSelectHighlight">@color/row_selected</item>
+    </style>
+</resources>
