@@ -55,14 +55,14 @@ class PollWorker(context: Context, params: WorkerParameters) : Worker(context, p
                 Notifier.post(context, titleFor(level, reason), bodyFor(store, balance, threshold, stats, reason))
             }
 
-            IconSwitcher.apply(context, level)
+            IconSwitcher.apply(context, level).also { store.iconStatus = it }
             PowerWidget.updateAll(context)
             Result.success()
         } catch (e: Exception) {
             // 查询失败：图标转灰（与托盘程序一致），并让 WorkManager 稍后重试
             store.lastError = e.message ?: e.toString()
             store.lastLevel = Level.UNKNOWN
-            IconSwitcher.apply(context, Level.UNKNOWN)
+            IconSwitcher.apply(context, Level.UNKNOWN).also { store.iconStatus = it }
             PowerWidget.updateAll(context)
             Result.retry()
         }

@@ -212,7 +212,7 @@ class SetupActivity : Activity() {
         }
 
         // 保存后顺手把图标切到当前状态（避免刚设完还是默认绿色而数据是低电量）
-        IconSwitcher.apply(this, store.lastLevel)
+        store.iconStatus = IconSwitcher.apply(this, store.lastLevel)
         PowerWidget.updateAll(this)
 
         toast("已保存，开始后台监控")

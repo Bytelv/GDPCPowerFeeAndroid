@@ -128,8 +128,7 @@ class MainActivity : Activity() {
         lines.add("上次提醒：" + (if (store.lastAlertAt > 0) fmtTime(store.lastAlertAt) + "（" + store.lastAlertReason + "）" else "无"))
         lines.add("后台执行次数：" + store.pollCount + " 次（含手动触发）")
         lines.add("通知权限：" + if (notificationsOn) "已开启" else "未开启 ← 点上面的按钮授权")
-        lines.add("桌面图标：" + (if (store.dynamicIcon) "随电量变色" else "固定不变") +
-            (if (store.currentAlias.isNotEmpty()) "（当前 " + store.currentAlias.removePrefix(".") + "）" else ""))
+        lines.add("桌面图标：" + (if (store.dynamicIcon) "随电量变色" else "固定不变") + " —— " + store.iconStatus)
         if (store.lastError.isNotEmpty()) lines.add("上次失败原因：" + store.lastError)
         lines.add("历史采样：" + points.size + " 个点（保留最近 7 天）")
         checkText.text = lines.joinToString("\n")

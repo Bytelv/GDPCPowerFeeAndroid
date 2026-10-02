@@ -116,6 +116,11 @@ class Store(context: Context) {
         get() = sp.getString(KEY_CURRENT_ALIAS, "") ?: ""
         set(v) = sp.edit().putString(KEY_CURRENT_ALIAS, v).apply()
 
+    /** 上一次切换图标的结果（失败原因要能看见，否则用户只会觉得"这功能没用"） */
+    var iconStatus: String
+        get() = sp.getString(KEY_ICON_STATUS, "尚未切换") ?: "尚未切换"
+        set(v) = sp.edit().putString(KEY_ICON_STATUS, v).apply()
+
     // ---------------- 历史采样 ----------------
 
     fun history(): MutableList<Pair<Long, Double>> {
@@ -167,6 +172,7 @@ class Store(context: Context) {
         const val KEY_LAST_ERROR = "lastError"
         const val KEY_POLL_COUNT = "pollCount"
         const val KEY_CURRENT_ALIAS = "currentAlias"
+        const val KEY_ICON_STATUS = "iconStatus"
         const val KEY_HISTORY = "history"
     }
 }
