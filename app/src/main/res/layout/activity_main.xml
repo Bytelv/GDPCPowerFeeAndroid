@@ -233,17 +233,72 @@
             android:textColor="@color/text_primary"
             android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/batteryBtn"
+        <!-- ============ 后台保活 ============ -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/btn_secondary_bg"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:text="允许后台运行（电池优化白名单）"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp" />
+            android:layout_marginTop="12dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="让提醒可靠送达"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:lineSpacingExtra="3dp"
+                android:text="小米 / 华为 / 荣耀 / OPPO / vivo 等系统会限制后台运行。下面两项都放行，提醒才稳定；只做一项仍可能被拦截。"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/batteryStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/autoStartStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/autoStartBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_secondary_bg"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="允许自启动（跳转系统设置）"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/batteryBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_secondary_bg"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="允许后台运行（电池优化白名单）"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <!-- ============ 运行自检 ============ -->
         <LinearLayout

@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -43,6 +44,8 @@ class MainActivity : Activity() {
     private lateinit var notifyBtn: Button
     private lateinit var chart: HistoryChartView
     private lateinit var chartCaption: TextView
+    private lateinit var batteryStatus: TextView
+    private lateinit var autoStartStatus: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +65,8 @@ class MainActivity : Activity() {
         notifyBtn = findViewById(R.id.notifyBtn)
         chart = findViewById(R.id.chart)
         chartCaption = findViewById(R.id.chartCaption)
+        batteryStatus = findViewById(R.id.batteryStatus)
+        autoStartStatus = findViewById(R.id.autoStartStatus)
 
         if (!store.configured) {
             startActivity(Intent(this, SetupActivity::class.java))
@@ -81,6 +86,7 @@ class MainActivity : Activity() {
             startActivity(Intent(this, SetupActivity::class.java))
         }
         findViewById<Button>(R.id.batteryBtn).setOnClickListener { openBatterySettings() }
+        findViewById<Button>(R.id.autoStartBtn).setOnClickListener { openAutoStartSettings() }
         notifyBtn.setOnClickListener { askNotificationPermission() }
     }
 
@@ -146,6 +152,9 @@ class MainActivity : Activity() {
         if (store.lastError.isNotEmpty()) lines.add("上次失败原因：" + store.lastError)
         lines.add("历史采样：" + points.size + " 个点（保留最近 7 天）")
         checkText.text = lines.joinToString("\n")
+
+        // 从系统设置页返回时会走 onResume → refreshUi，所以这里能实时反映白名单状态
+        refreshKeepAliveStatus()
     }
 
     private fun applyBadgeColor(level: Level) {
@@ -207,6 +216,39 @@ class MainActivity : Activity() {
         } catch (e: Exception) {
             openAppDetails()
         }
+    }
+
+    /**
+     * 跳转到厂商的「自启动管理」页。
+     *
+     * Android 没有标准自启动 API，只能按厂商候选组件尝试（见 AutoStartHelper）；
+     * 顺序里第一个能解析的就被打开——华为/荣耀共用 systemmanager，所以荣耀会命中
+     * com.huawei.systemmanager 那几条。
+     * 全部失败时退回应用详情页，并明确告知需要手动找，而不是无声无息什么都不发生。
+     */
+    private fun openAutoStartSettings() {
+        if (AutoStartHelper.open(this)) {
+            toast("请在列表里找到「电量哨兵」，允许自启动 / 后台活动")
+        } else {
+            toast("本系统没有可跳转的自启动页，已打开应用详情，请手动允许自启动")
+            openAppDetails()
+        }
+    }
+
+    /** 电池优化白名单可以检测，自启动状态系统不提供接口（只能让用户自己确认） */
+    private fun refreshKeepAliveStatus() {
+        val ignoring = try {
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            pm.isIgnoringBatteryOptimizations(packageName)
+        } catch (e: Exception) {
+            false
+        }
+        batteryStatus.text = if (ignoring) {
+            "电池优化：已加入白名单 ✓"
+        } else {
+            "电池优化：尚未加入白名单（点下面的按钮添加）"
+        }
+        autoStartStatus.text = "自启动：系统不提供检测接口，请在跳转后的页面确认已允许"
     }
 
     private fun openAppDetails() {

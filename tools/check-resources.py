@@ -252,7 +252,7 @@ print("[6/6] 关键类清单")
 required = [
     "MainActivity", "SetupActivity", "PollWorker", "Scheduler",
     "SchoolApi", "Store", "Level", "Notifier", "IconSwitcher", "PowerWidget",
-    "HistoryChartView",
+    "HistoryChartView", "AutoStartHelper",
 ]
 for cls in required:
     if cls not in kt_sources:
