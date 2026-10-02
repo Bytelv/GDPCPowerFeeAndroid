@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 电量状态色，与托盘程序 / 网页版的配色保持一致 -->
+    <color name="level_ok">#1F7A45</color>
+    <color name="level_warn">#B7791F</color>
+    <color name="level_low">#C53030</color>
+    <color name="level_unknown">#6B7A72</color>
+
+    <!-- 自适应图标的背景色（4 种状态各一个） -->
+    <color name="ic_bg_ok">#1F7A45</color>
+    <color name="ic_bg_warn">#B7791F</color>
+    <color name="ic_bg_low">#C53030</color>
+    <color name="ic_bg_unknown">#6B7A72</color>
+
+    <color name="text_muted">#6B7A72</color>
+</resources>

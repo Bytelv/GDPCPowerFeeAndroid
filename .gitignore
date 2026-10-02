@@ -1,0 +1,27 @@
+# 构建产物
+build/
+.gradle/
+*.apk
+*.aab
+*.ap_
+release/
+
+# 签名材料绝不入库
+*.jks
+*.keystore
+keystore.properties
+local.properties
+
+# IDE
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# 本机调试数据
+.local/
+*.log
+
+# 临时文件（例如 git 提交信息）；请统一放在 .local/ 下，这里只是兜底
+.local-commit-msg.txt

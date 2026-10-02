@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">电量哨兵</string>
+    <string name="setup_title">设置</string>
+    <string name="widget_label">电量哨兵</string>
+    <string name="widget_description">显示宿舍剩余电量，并按电量状态变色</string>
+</resources>

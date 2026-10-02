@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Android 13+ 发通知需要运行时授权 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_ok"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault.Light">
+
+        <!-- 主界面：本身不带 LAUNCHER 过滤器，桌面图标由下面 4 个别名提供（动态换图标的关键） -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".SetupActivity"
+            android:exported="false"
+            android:label="@string/setup_title" />
+
+        <!--
+          四个桌面图标别名，对应四种电量状态（绿/黄/红/灰）。
+          App 每次查询后调用 IconSwitcher 只启用其中一个，从而实现"图标随电量变色"。
+          注意：部分第三方桌面在切换别名时会重排图标位置，这是系统行为，无法完全避免；
+          桌面小组件（PowerWidget）是更稳的替代方案，两者可同时使用。
+        -->
+        <activity-alias
+            android:name=".LauncherOk"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_ok"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".LauncherWarn"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_warn"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".LauncherLow"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_low"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".LauncherUnknown"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_unknown"
+            android:label="@string/app_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 桌面小组件：显示余额并按状态上色，替代"图标变色"的更稳方案 -->
+        <receiver
+            android:name=".PowerWidget"
+            android:exported="false"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/power_widget_info" />
+        </receiver>
+
+    </application>
+
+</manifest>

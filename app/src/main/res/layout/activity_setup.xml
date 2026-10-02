@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择你的宿舍"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp"
+            android:text="准备中…"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/reloadBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="重新读取房间列表" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="校区"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/campusSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="楼栋"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/buildingSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="房间（括号内为当前余额）"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/roomSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="提醒阈值（度）：低于此值就提醒"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/thresholdInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="例如 20"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="后台查询间隔"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/intervalSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/wifiOnlyCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="仅在 WiFi 下查询（省流量：接口一次返回全校，约 940 KB）"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/notifyWarnCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入预警区也提醒（关掉则只提醒低电量）"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/notifyRecoveryCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="充值恢复后提醒一次"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/dynamicIconCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="桌面图标随电量变色"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="3dp"
+            android:text="关于图标变色：Android 没有官方的“动态改图标”接口，本应用靠切换四个桌面图标别名实现，个别第三方桌面会因此重排甚至移除图标（重新拖出来即可）。若不希望如此，可关掉这一项，改用桌面小组件——小组件同样按电量状态变色，且完全稳定。"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="保存并开始监控" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="3dp"
+            android:text="保存后请务必做两件事，否则可能收不到提醒：\n1) 允许本应用发送通知；\n2) 在系统设置里允许本应用自启动、并加入电池优化白名单（小米/华为/OPPO/vivo 尤其严格）。"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>
