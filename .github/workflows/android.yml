@@ -3,11 +3,13 @@ name: Build APK
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
 
+# 发 Release 需要写权限；fork 来的 PR 由 GitHub 强制降为只读，不受影响
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -69,3 +71,22 @@ jobs:
             app/build/outputs/apk/release/*.apk
             app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      # 打 tag（v1.0 这种）时自动发 Release，把签名 APK 作为附件公开直链。
+      # 之所以不手工上传：Actions 产物下载需要登录 GitHub，同学没账号下不动；
+      # Release 附件是公开直链，而且以后每次发版只要打个 tag。
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v') && steps.keystore.outputs.have_keystore == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            app/build/outputs/apk/release/app-release.apk \
+            --title "电量哨兵 $GITHUB_REF_NAME" \
+            --notes-file .github/release-notes.md
+
+      - name: Warn when a tag was pushed without signing keys
+        if: startsWith(github.ref, 'refs/tags/v') && steps.keystore.outputs.have_keystore != 'yes'
+        run: |
+          echo "::error::推了 tag 但没有签名密钥，拒绝发布 debug 包。请检查 Repository secrets 后重新打 tag。"
+          exit 1

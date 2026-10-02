@@ -11,6 +11,8 @@ android {
         applicationId = "top.lvbyte.powerfee"
         minSdk = 24
         targetSdk = 34
+        // 对外发版时两处都要改：versionCode 每次 +1，versionName 与 tag 同名（如 v1.1）。
+        // Android 靠 versionCode 判断是不是新版本，忘了加会出现"装完还是旧版"的错觉。
         versionCode = 1
         versionName = "1.0"
         resourceConfigurations += listOf("zh", "en")
