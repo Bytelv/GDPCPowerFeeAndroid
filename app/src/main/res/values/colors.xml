@@ -31,11 +31,12 @@
     <color name="text_primary">#16211C</color>
     <color name="text_muted">#6B7A72</color>
 
-    <!-- 强调色与高亮色：写死以防 OEM 主题（MIUI 上曾出现粉色高亮） -->
+    <!-- 强调色与高亮色：写死以防 OEM 主题（荣耀 MagicOS / 小米 MIUI 都会替换框架资源） -->
     <color name="accent">#1F7A45</color>
     <color name="ripple_tint">#331F7A45</color>
-    <color name="row_selected">#331F7A45</color>
-    <color name="row_pressed">#551F7A45</color>
+    <!-- 下拉行的高亮色必须是**不透明**的：透明会把 ListView 背后那层 OEM 高亮露出来 -->
+    <color name="row_selected">#DCEFE4</color>
+    <color name="row_pressed">#C6E4D4</color>
 
     <!-- 徽标与主按钮的文字色 -->
     <color name="badge_text">#FFFFFFFF</color>

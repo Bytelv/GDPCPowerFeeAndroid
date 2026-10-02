@@ -20,8 +20,9 @@
 
     <color name="accent">#3EA46A</color>
     <color name="ripple_tint">#4D3EA46A</color>
-    <color name="row_selected">#4D3EA46A</color>
-    <color name="row_pressed">#663EA46A</color>
+    <!-- 同样保持不透明，理由见 values/colors.xml -->
+    <color name="row_selected">#1F3A30</color>
+    <color name="row_pressed">#2A5245</color>
 
     <!-- 深色下绿底用深色文字更清楚；徽标同理 -->
     <color name="badge_text">#FF0B1512</color>

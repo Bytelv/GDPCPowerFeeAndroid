@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 下拉行背景：按下/聚焦用较深的绿，当前选中用浅绿，其余透明。
-     全部引用本应用的颜色，不引用任何 ?android:attr/* 主题属性。 -->
+<!--
+  下拉行背景。
+
+  为什么每个状态都是**不透明**颜色，而不是"透明 + 只给按下态上色"：
+  下拉列表的高亮可能来自两个地方——
+    1) 行自身的背景（框架布局被 OEM 替换过，见 spinner_dropdown_item.xml 的说明）
+    2) ListView 的选中高亮层（主题的 listSelector，默认画在行的**背后**）
+  如果行背景透明，第 2 种就会透出来（实测荣耀 MagicOS 上会显出粉色）。
+  用不透明背景把整行盖住，两种来源就都影响不到颜色了；按下/选中反馈由本文件自己提供。
+  华为 EMUI / 荣耀 MagicOS / 小米 MIUI 都会替换框架主题资源，这个做法不依赖厂商。
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true" android:drawable="@color/row_pressed" />
     <item android:state_focused="true" android:drawable="@color/row_pressed" />
     <item android:state_activated="true" android:drawable="@color/row_selected" />
     <item android:state_selected="true" android:drawable="@color/row_selected" />
-    <item android:drawable="@android:color/transparent" />
+    <item android:drawable="@color/card_bg" />
 </selector>
