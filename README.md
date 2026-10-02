@@ -65,16 +65,25 @@
 ### 配置签名（建议一开始就做）
 
 升级链依赖同一个签名密钥 —— 中途换密钥，用户必须先卸载再装。所以第一次发版前就生成好，
-并把密钥放进 GitHub Secrets：
+并把密钥放进 GitHub Secrets。
 
-```bash
-keytool -genkeypair -v -keystore release.jks -alias powerfee \
-        -keyalg RSA -keysize 2048 -validity 10000 \
-        -storetype JKS -dname "CN=lvbyte, OU=dev, O=lvbyte, L=Guangzhou, ST=Guangdong, C=CN"
+**用仓库里的脚本（推荐）**：随机生成口令、生成 keystore、打印证书指纹（只含公开信息），
+并把四个 Secrets 直接写进被 gitignore 覆盖的 `.local/github-secrets.txt`：
 
-# 转成 base64 用于 GitHub Secrets（Windows: certutil -encode release.jks tmp.b64）
-base64 -w0 release.jks
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/gen-keystore.ps1
 ```
+
+> 脚本**不会把口令打印到终端**，只写进 `.local/github-secrets.txt`；
+> 复制完四个值到 GitHub 后请删除该文件。
+> 想手动来一遍的话，等价命令是：
+>
+> ```bash
+> keytool -genkeypair -v -keystore release.jks -alias powerfee \
+>         -keyalg RSA -keysize 2048 -validity 10000 \
+>         -storetype JKS -dname "CN=lvbyte, OU=dev, O=lvbyte, L=Guangzhou, ST=Guangdong, C=CN"
+> base64 -w0 release.jks     # Windows: certutil -encode release.jks tmp.b64
+> ```
 
 在仓库 Settings → Secrets and variables → Actions 里添加：
 
