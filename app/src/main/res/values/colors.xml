@@ -13,4 +13,8 @@
     <color name="ic_bg_unknown">#6B7A72</color>
 
     <color name="text_muted">#6B7A72</color>
+
+    <!-- 历史曲线用的颜色（浅色主题） -->
+    <color name="chart_axis">#E3E8E5</color>
+    <color name="chart_area">#1F1F7A45</color>
 </resources>

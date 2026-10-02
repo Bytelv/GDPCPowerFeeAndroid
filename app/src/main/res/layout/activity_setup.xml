@@ -32,7 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="重新读取房间列表" />
+            android:text="更换房间（重新读取房间列表）" />
+
+        <TextView
+            android:id="@+id/currentRoomText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:id="@+id/pickerGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -72,6 +86,8 @@
             android:id="@+id/roomSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"

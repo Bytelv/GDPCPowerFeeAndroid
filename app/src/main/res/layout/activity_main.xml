@@ -143,6 +143,28 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="最近 7 天余额"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- 自定义 View 手绘曲线：红色虚线是提醒阈值，黄色虚线是预警线 -->
+        <top.lvbyte.powerfee.HistoryChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/chartCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp" />
+
         <Button
             android:id="@+id/refreshBtn"
             android:layout_width="match_parent"

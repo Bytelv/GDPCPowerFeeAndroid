@@ -41,6 +41,8 @@ class MainActivity : Activity() {
     private lateinit var pollCount: TextView
     private lateinit var checkText: TextView
     private lateinit var notifyBtn: Button
+    private lateinit var chart: HistoryChartView
+    private lateinit var chartCaption: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,8 @@ class MainActivity : Activity() {
         pollCount = findViewById(R.id.pollCount)
         checkText = findViewById(R.id.checkText)
         notifyBtn = findViewById(R.id.notifyBtn)
+        chart = findViewById(R.id.chart)
+        chartCaption = findViewById(R.id.chartCaption)
 
         if (!store.configured) {
             startActivity(Intent(this, SetupActivity::class.java))
@@ -121,6 +125,14 @@ class MainActivity : Activity() {
         dailyUsage.text = stats.dailyUsage?.let { String.format(Locale.US, "%.2f", it) } ?: "--"
         daysLeft.text = stats.daysLeft?.let { String.format(Locale.US, "%.1f", it) } ?: "--"
         pollCount.text = store.pollCount.toString()
+
+        // 曲线：把两条阈值线也画进去，方便判断"还有多少余量"
+        chart.setData(points, store.threshold, store.warnRatio)
+        chartCaption.text = if (points.size < 2) {
+            "采样点不足：目前 ${points.size} 个（每查询一次记 1 个，满 2 个就能出曲线）"
+        } else {
+            "共 ${points.size} 个采样点 · 最早 ${fmtTime(points.first().first)}（只保留最近 7 天）"
+        }
 
         val notificationsOn = notificationsEnabled()
         notifyBtn.visibility = if (notificationsOn) View.GONE else View.VISIBLE

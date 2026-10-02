@@ -38,6 +38,8 @@ class SetupActivity : Activity() {
     private lateinit var notifyRecoveryCheck: CheckBox
     private lateinit var dynamicIconCheck: CheckBox
     private lateinit var statusText: TextView
+    private lateinit var currentRoomText: TextView
+    private lateinit var pickerGroup: View
     private lateinit var reloadBtn: Button
     private lateinit var saveBtn: Button
 
@@ -59,6 +61,8 @@ class SetupActivity : Activity() {
         notifyRecoveryCheck = findViewById(R.id.notifyRecoveryCheck)
         dynamicIconCheck = findViewById(R.id.dynamicIconCheck)
         statusText = findViewById(R.id.statusText)
+        currentRoomText = findViewById(R.id.currentRoomText)
+        pickerGroup = findViewById(R.id.pickerGroup)
         reloadBtn = findViewById(R.id.reloadBtn)
         saveBtn = findViewById(R.id.saveBtn)
 
@@ -91,7 +95,17 @@ class SetupActivity : Activity() {
         reloadBtn.setOnClickListener { loadRooms() }
         saveBtn.setOnClickListener { save() }
 
-        loadRooms()
+        // 已经配置过房间时**不**自动下载房间列表：列表有 940 KB，而改阈值、改间隔
+        // 完全用不到它。只有首次使用、或用户主动点"更换房间"才去拉。
+        if (store.configured) {
+            currentRoomText.text = "当前监控：" + store.roomName + "（" + store.roomNum + "）"
+            statusText.text = "只改阈值或查询间隔的话，直接改完点保存即可，不需要重新下载房间列表。\n" +
+                "要换房间就点上面的按钮重新读取。"
+            saveBtn.isEnabled = true
+        } else {
+            currentRoomText.text = "还没有选择房间，请先读取房间列表"
+            loadRooms()
+        }
     }
 
     // ---------------- 房间列表 ----------------
@@ -109,6 +123,8 @@ class SetupActivity : Activity() {
                     campuses = fetched.map { it.campus.ifEmpty { "未标注校区" } }.distinct().sorted()
                     campusSpinner.adapter = simpleAdapter(campuses)
                     statusText.text = "共读取到 ${fetched.size} 个房间，请依次选择校区 / 楼栋 / 房间"
+                    currentRoomText.text = "请从下面选择要监控的房间"
+                    pickerGroup.visibility = View.VISIBLE
                     reloadBtn.isEnabled = true
                     saveBtn.isEnabled = true
                     restoreSelection()
@@ -116,9 +132,10 @@ class SetupActivity : Activity() {
             } catch (e: Exception) {
                 runOnUiThread {
                     statusText.text = "读取失败：" + (e.message ?: e.toString()) +
-                        "\n\n可能原因：网络不通、或请求被学校 WAF 拒绝。可点「重新读取」重试。"
+                        "\n\n可能原因：网络不通、或请求被学校 WAF 拒绝。可点「更换房间」重试。"
                     reloadBtn.isEnabled = true
-                    saveBtn.isEnabled = false
+                    // 已经配置过的话，失败也不影响改设置
+                    saveBtn.isEnabled = store.configured
                 }
             }
         }.start()
@@ -179,9 +196,14 @@ class SetupActivity : Activity() {
     // ---------------- 保存 ----------------
 
     private fun save() {
-        val room = currentRoomsInBuilding().getOrNull(roomSpinner.selectedItemPosition)
-        if (room == null) {
-            toast("请先选择房间")
+        // 房间列表没加载时（已配置过、只想改设置）保留原房间，只更新设置项
+        val room = if (rooms.isEmpty()) {
+            null
+        } else {
+            currentRoomsInBuilding().getOrNull(roomSpinner.selectedItemPosition)
+        }
+        if (room == null && !store.configured) {
+            toast("请先读取房间列表并选择房间")
             return
         }
 
@@ -191,10 +213,12 @@ class SetupActivity : Activity() {
             return
         }
 
-        store.roomNum = room.roomNum
-        store.campusName = room.campus
-        store.buildingName = room.building
-        store.roomName = room.displayName
+        if (room != null) {
+            store.roomNum = room.roomNum
+            store.campusName = room.campus
+            store.buildingName = room.building
+            store.roomName = room.displayName
+        }
         store.threshold = threshold
         store.intervalMinutes = Scheduler.INTERVAL_OPTIONS[intervalSpinner.selectedItemPosition.coerceIn(0, Scheduler.INTERVAL_OPTIONS.size - 1)]
         store.wifiOnly = wifiOnlyCheck.isChecked
