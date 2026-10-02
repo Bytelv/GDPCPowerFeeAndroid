@@ -32,12 +32,19 @@ jobs:
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          # 允许把 "KEYSTORE_BASE64=..." 整行粘进来，也容忍多余空白/换行
+          VALUE="$KEYSTORE_BASE64"
+          case "$VALUE" in
+            KEYSTORE_BASE64=*) VALUE="${VALUE#KEYSTORE_BASE64=}" ;;
+          esac
+          VALUE="$(printf '%s' "$VALUE" | tr -d '[:space:]')"
+          if [ -n "$VALUE" ]; then
+            printf '%s' "$VALUE" | base64 -d > "$RUNNER_TEMP/release.jks"
             echo "have_keystore=yes" >> "$GITHUB_OUTPUT"
+            echo "签名密钥已就绪，将构建 release 包"
           else
             echo "have_keystore=no" >> "$GITHUB_OUTPUT"
-            echo "::notice::未配置签名密钥，本次构建 debug 包（可安装，但不能用于后续升级链）"
+            echo "::warning::未读到 KEYSTORE_BASE64（密钥应填在 Repository secrets，不是 Environment secrets）。本次构建 debug 包，签名与 release 不同，不要用它给同学长期分发。"
           fi
 
       - name: Build signed release APK
@@ -56,7 +63,8 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: powerfee-sentry-apk
+          # 产物名直接标明签名状态，避免误把 debug 包当正式包分发
+          name: powerfee-sentry-apk${{ steps.keystore.outputs.have_keystore == 'yes' && '-signed' || '-debug-unsigned-for-release' }}
           path: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/apk/debug/*.apk
