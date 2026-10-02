@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spinner 收起时显示的视图。刻意不用 android.R.layout.simple_spinner_item：
+     OEM（如 MIUI）会替换框架布局与其中的颜色引用，导致外观不可控。 -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:textColor="@color/text_primary"
+    android:textSize="15sp" />

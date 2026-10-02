@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 下拉行背景：按下/聚焦用较深的绿，当前选中用浅绿，其余透明。
+     全部引用本应用的颜色，不引用任何 ?android:attr/* 主题属性。 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@color/row_pressed" />
+    <item android:state_focused="true" android:drawable="@color/row_pressed" />
+    <item android:state_activated="true" android:drawable="@color/row_selected" />
+    <item android:state_selected="true" android:drawable="@color/row_selected" />
+    <item android:drawable="@android:color/transparent" />
+</selector>

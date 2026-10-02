@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  下拉列表的每一行。
+  这是"点击后出现粉色高亮"的根治点：原来用的是 android.R.layout.simple_spinner_dropdown_item，
+  它的行背景是 ?android:attr/listChoiceBackgroundIndicator —— 在 MIUI 上这个资源被替换成了
+  引用 MIUI 私有颜色的版本，所以不管怎么覆盖 AOSP 的 colorActivatedHighlight 都没用。
+  这里换成完全自绘的背景（spinner_row_bg），颜色只来自本应用的资源。
+-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/spinner_row_bg"
+    android:gravity="center_vertical"
+    android:minHeight="48dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:textColor="@color/text_primary"
+    android:textSize="15sp" />

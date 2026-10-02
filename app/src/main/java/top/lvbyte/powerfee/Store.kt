@@ -123,16 +123,25 @@ class Store(context: Context) {
 
     // ---------------- 历史采样 ----------------
 
+    /**
+     * 历史采样**按房间隔离**：存的时候记下所属房间号，读的时候若与当前房间不一致就返回空。
+     *
+     * 这样"重新选择宿舍"之后曲线会自然从零开始，不会把上一个宿舍的余额和新宿舍的余额
+     * 连成一条毫无意义的曲线（两个房间的用电完全无关，混在一起看不出任何趋势）。
+     */
     fun history(): MutableList<Pair<Long, Double>> {
         val raw = sp.getString(KEY_HISTORY, null) ?: return ArrayList()
         val out = ArrayList<Pair<Long, Double>>()
         try {
-            val arr = JSONArray(raw)
+            val root = JSONObject(raw)
+            if (root.optString("room") != roomNum) return ArrayList()
+            val arr = root.optJSONArray("points") ?: return ArrayList()
             for (i in 0 until arr.length()) {
-                val o = arr.optJSONObject(i) ?: continue
-                out.add(o.optLong("t") to o.optDouble("v"))
+                val point = arr.optJSONArray(i) ?: continue
+                out.add(point.optLong(0) to point.optDouble(1))
             }
         } catch (e: Exception) {
+            // 旧版本存的是 [{t,v},…] 数组，解析不了就当空历史处理（升级后自然重新累积）
             return ArrayList()
         }
         return out
@@ -146,9 +155,28 @@ class Store(context: Context) {
         val trimmed = points.filter { it.first >= cutoff }.takeLast(600)
         val arr = JSONArray()
         for (p in trimmed) {
-            arr.put(JSONObject().put("t", p.first).put("v", p.second))
+            arr.put(JSONArray().put(p.first).put(p.second))
         }
-        sp.edit().putString(KEY_HISTORY, arr.toString()).apply()
+        val root = JSONObject().put("room", roomNum).put("points", arr)
+        sp.edit().putString(KEY_HISTORY, root.toString()).apply()
+    }
+
+    /**
+     * 换了监控房间时调用：清掉上一个房间的运行状态。
+     * 不清的话，主界面、小组件、桌面图标会继续显示上一个宿舍的余额与提醒状态，
+     * 而曲线里还会残留旧房间的采样点。
+     * 房间号、阈值等设置项不动（调用方已写好）。
+     */
+    fun resetForNewRoom() {
+        sp.edit()
+            .remove(KEY_LAST_BALANCE)
+            .remove(KEY_LAST_LEVEL)
+            .remove(KEY_LAST_OK_AT)
+            .remove(KEY_LAST_ALERT_AT)
+            .remove(KEY_LAST_ALERT_REASON)
+            .remove(KEY_LAST_ERROR)
+            .remove(KEY_HISTORY)
+            .apply()
     }
 
     private companion object {

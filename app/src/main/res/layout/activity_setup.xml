@@ -163,6 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:buttonTint="@color/accent"
                 android:text="仅在 WiFi 下查询（省流量：接口一次返回全校，约 940 KB）"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp" />
@@ -171,6 +172,7 @@
                 android:id="@+id/notifyWarnCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/accent"
                 android:text="进入预警区也提醒（关掉则只提醒低电量）"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp" />
@@ -179,6 +181,7 @@
                 android:id="@+id/notifyRecoveryCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/accent"
                 android:text="充值恢复后提醒一次"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp" />
@@ -187,6 +190,7 @@
                 android:id="@+id/dynamicIconCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:buttonTint="@color/accent"
                 android:text="桌面图标随电量变色"
                 android:textColor="@color/text_primary"
                 android:textSize="13sp" />

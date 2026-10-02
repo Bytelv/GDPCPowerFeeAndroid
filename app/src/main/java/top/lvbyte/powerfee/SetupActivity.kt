@@ -188,8 +188,11 @@ class SetupActivity : Activity() {
     }
 
     private fun simpleAdapter(labels: List<String>): ArrayAdapter<String> {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        // 用自绘的 item 布局，而不是 android.R.layout.simple_spinner_*：
+        // 后者的下拉行背景在 MIUI 上被替换成引用厂商私有颜色的版本，
+        // 会出现粉色高亮（且覆盖 AOSP 主题属性无效）。
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, labels)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         return adapter
     }
 
@@ -214,7 +217,12 @@ class SetupActivity : Activity() {
         }
 
         if (room != null) {
-            store.roomNum = room.roomNum
+            if (room.roomNum != store.roomNum) {
+                // 换房间：先写新房号，再清掉旧房间的余额、状态与历史，
+                // 免得主界面/小组件继续显示上一个宿舍的数据、曲线里混着旧采样点
+                store.roomNum = room.roomNum
+                store.resetForNewRoom()
+            }
             store.campusName = room.campus
             store.buildingName = room.building
             store.roomName = room.displayName
