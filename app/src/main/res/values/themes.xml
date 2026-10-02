@@ -5,7 +5,7 @@
 
       这里显式指定了 colorAccent 与全部 *Highlight 颜色，原因是：
       Theme.DeviceDefault 是"设备默认主题"，**OEM 会替换它的强调色**。
-      实测在 MIUI 上，Spinner 下拉行的按压高亮会变成品红色（粉色），
+      实测在荣耀 MagicOS 上，Spinner 下拉行的按压高亮会变成品红色（粉色），
       复选框勾选色也是 OEM 蓝——都是吃了 OEM 强调色的结果。
       把这几项写死，外观就不再随厂商主题变化。
     -->
@@ -20,5 +20,25 @@
         <item name="android:colorFocusedHighlight">@color/row_pressed</item>
         <item name="android:colorLongPressedHighlight">@color/row_pressed</item>
         <item name="android:colorMultiSelectHighlight">@color/row_selected</item>
+        <!-- 全局统一按钮外观，见下面的 AppButton 说明 -->
+        <item name="android:buttonStyle">@style/AppButton</item>
+    </style>
+
+    <!--
+      本应用所有按钮的统一基样式。
+
+      为什么需要它：框架 Button 默认带"海拔"效果（Material 用 stateListAnimator
+      在按下时抬升并画出阴影）。我们自己给按钮设了圆角描边背景之后，
+      那层阴影就变成按钮外侧一圈多余的灰边，看起来像描边重影。
+      在这里把海拔与 stateListAnimator 一起清零，改成扁平外观，
+      与卡片式设计一致；按下反馈由自绘的水波纹提供（btn_primary_bg / btn_secondary_bg）。
+
+      挂在主题的 android:buttonStyle 上而不是逐个按钮加属性：
+      这样以后新增按钮自动继承，不会漏。
+    -->
+    <style name="AppButton" parent="@android:style/Widget.DeviceDefault.Button">
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:background">@null</item>
     </style>
 </resources>
