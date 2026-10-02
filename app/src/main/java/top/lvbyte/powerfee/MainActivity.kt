@@ -138,7 +138,7 @@ class MainActivity : Activity() {
         notifyBtn.visibility = if (notificationsOn) View.GONE else View.VISIBLE
 
         val lines = ArrayList<String>()
-        lines.add("上次查询成功：" + fmtTime(store.lastOkAt))
+        lines.add("上次查询成功：" + fmtTime(store.lastOkAt) + freshness(store))
         lines.add("上次提醒：" + (if (store.lastAlertAt > 0) fmtTime(store.lastAlertAt) + "（" + store.lastAlertReason + "）" else "无"))
         lines.add("后台执行次数：" + store.pollCount + " 次（含手动触发）")
         lines.add("通知权限：" + if (notificationsOn) "已开启" else "未开启 ← 点上面的按钮授权")
@@ -223,6 +223,27 @@ class MainActivity : Activity() {
         if (epochSeconds <= 0L) return "从未"
         val sdf = SimpleDateFormat("MM-dd HH:mm", Locale.getDefault())
         return sdf.format(Date(epochSeconds * 1000))
+    }
+
+    /**
+     * 数据新鲜度，形如「（3 小时前）」/「（偏旧：8 小时前）」。
+     *
+     * 这一页可以放心用相对时间：它每次打开都会重绘（onResume → refreshUi），
+     * 所以算出来的差值一定是当前的。桌面小组件不行——它只在轮询成功后和系统 tick 时重绘，
+     * 相对时间会永远停在"刚刚更新"，那边因此改用绝对时间。
+     */
+    private fun freshness(store: Store): String {
+        val lastOk = store.lastOkAt
+        if (lastOk <= 0L) return ""
+        val minutes = (System.currentTimeMillis() / 1000 - lastOk) / 60
+        val text = when {
+            minutes < 2 -> "2 分钟内"
+            minutes < 60 -> "$minutes 分钟前"
+            minutes < 60 * 24 -> "${minutes / 60} 小时前"
+            else -> "${minutes / (60 * 24)} 天前"
+        }
+        val staleAfterMinutes = maxOf(store.intervalMinutes.toLong() * 2, 90L)
+        return if (minutes >= staleAfterMinutes) "（偏旧：$text）" else "（$text）"
     }
 
     private fun toast(message: String) {

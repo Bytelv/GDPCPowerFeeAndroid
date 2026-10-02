@@ -8,6 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 /**
@@ -83,7 +86,13 @@ class PowerWidget : AppWidgetProvider() {
 
         /**
          * 第二行文案。顺序按"信息价值"排：
-         *   状态（一定显示） → 还能用几天（仅预警/低电量时） → 数据更新时间（能打消"数据是不是停了"的疑虑）
+         *   状态（一定显示） → 还能用几天（仅预警/低电量时） → 数据更新时间
+         *
+         * ⚠️ 这里必须用**绝对时间**，不能用"刚刚更新 / N 分钟前"。
+         * 原因是小组件的重绘时机：它只在①轮询成功后、②系统每 30 分钟的 tick 时重绘，
+         * 而①几乎总是紧跟在轮询成功之后 —— 那一刻算出来的差值永远是"0 分钟"，
+         * 于是文案会永久停在"刚刚更新"，完全反映不出数据实际有多旧（实测就是这个现象）。
+         * 绝对时间不需要持续重绘也始终真实，天气类小组件也都是这么做的。
          */
         private fun hintText(store: Store): String {
             val status = when (store.lastLevel) {
@@ -96,7 +105,7 @@ class PowerWidget : AppWidgetProvider() {
             if (store.lastLevel == Level.WARN || store.lastLevel == Level.LOW) {
                 daysLeftText(store)?.let { parts.add(it) }
             }
-            ageText(store)?.let { parts.add(it) }
+            updateTimeText(store)?.let { parts.add(it) }
             return if (parts.isEmpty()) status else status + " · " + parts.joinToString(" · ")
         }
 
@@ -109,19 +118,36 @@ class PowerWidget : AppWidgetProvider() {
         }
 
         /**
-         * 数据新鲜度。超过 2 倍查询间隔（且至少 90 分钟）就认为可能已过期，
-         * 措辞换成「N 小时前未更新」，让用户能自己判断是不是后台被系统掐了。
+         * 数据更新时间：「09:30 更新」/「昨天 21:30 更新」/「10-01 21:30 更新」。
+         * 若在重绘时已经超过 2 倍查询间隔（且至少 90 分钟），补一个「（偏旧）」提示——
+         * 它表达的是"重绘那一刻就已经偏旧了"，是保守判断，不会误报成新鲜。
          */
-        private fun ageText(store: Store): String? {
+        private fun updateTimeText(store: Store): String? {
             val lastOk = store.lastOkAt
             if (lastOk <= 0L) return null
             val minutes = (System.currentTimeMillis() / 1000 - lastOk) / 60
             val staleAfterMinutes = maxOf(store.intervalMinutes.toLong() * 2, 90L)
+            val text = stamp(lastOk) + " 更新"
+            return if (minutes >= staleAfterMinutes) "$text（偏旧）" else text
+        }
+
+        /**
+         * 时间戳：今天只说时:分；昨天带"昨天"；更早带上月-日。
+         * 只写"09:30"在跨天时会让人误以为是今天的，所以必须分情况。
+         */
+        private fun stamp(epochSeconds: Long): String {
+            val target = Calendar.getInstance().apply { timeInMillis = epochSeconds * 1000 }
+            val now = Calendar.getInstance()
+            val yesterday = (now.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
+            fun sameDay(a: Calendar, b: Calendar) =
+                a.get(Calendar.YEAR) == b.get(Calendar.YEAR) &&
+                    a.get(Calendar.DAY_OF_YEAR) == b.get(Calendar.DAY_OF_YEAR)
+
+            val date = Date(epochSeconds * 1000)
             return when {
-                minutes < 2 -> "刚刚更新"
-                minutes < 60 -> "更新于 $minutes 分钟前"
-                minutes < staleAfterMinutes -> "更新于 ${minutes / 60} 小时前"
-                else -> "${minutes / 60} 小时前未更新"
+                sameDay(target, now) -> SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
+                sameDay(target, yesterday) -> "昨天 " + SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
+                else -> SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(date)
             }
         }
     }
