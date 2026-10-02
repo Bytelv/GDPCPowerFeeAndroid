@@ -68,10 +68,11 @@ class PollWorker(context: Context, params: WorkerParameters) : Worker(context, p
         }
     }
 
+    /** 通知标题与小组件用同一套措辞：低电量直接给结论（需要充值），不混用三种说法 */
     private fun titleFor(level: Level, reason: String): String = when {
-        reason == "recovered" -> "✅ 电量已恢复"
-        level == Level.LOW -> "⚠️ 宿舍电量不足"
-        else -> "🔔 宿舍电量预警"
+        reason == "recovered" -> "✅ 宿舍电量已恢复"
+        level == Level.LOW -> "⚠️ 宿舍电费需要充值"
+        else -> "🔔 宿舍电量接近阈值"
     }
 
     private fun bodyFor(

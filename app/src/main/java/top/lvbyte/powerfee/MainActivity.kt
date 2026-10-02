@@ -99,11 +99,13 @@ class MainActivity : Activity() {
         balanceValue.text = if (balance == null) "--" else String.format(Locale.US, "%.2f", balance)
 
         val level = store.lastLevel
+        // 措辞与小组件、通知保持一致：低电量直接给结论（需要充值），
+        // 不用"电量偏低"这类无主语说法（那会让人以为是手机电量）
         levelBadge.text = when (level) {
-            Level.OK -> "电量充足"
-            Level.WARN -> "电量预警"
-            Level.LOW -> "电量偏低"
-            Level.UNKNOWN -> if (store.lastError.isEmpty()) "尚未获取" else "查询失败"
+            Level.OK -> "充足"
+            Level.WARN -> "接近阈值"
+            Level.LOW -> "需要充值"
+            Level.UNKNOWN -> if (store.lastError.isEmpty()) "未获取" else "获取失败"
         }
         applyBadgeColor(level)
 

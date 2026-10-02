@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  小组件布局：第一行是「数字 + 度」，第二行是状态与更新时间。
+  刻意把单位「度」做成独立的小字：一是省空间，二是让数字一眼看出是电量度数，
+  而不是手机剩余电量百分比（桌面组件就贴在系统电池图标旁边，这一点很关键）。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
@@ -7,20 +12,39 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <TextView
-        android:id="@+id/widget_balance"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="--"
-        android:textColor="#FFFFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--"
+            android:textColor="#FFFFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="度"
+            android:textColor="#E6FFFFFF"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/widget_hint"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="尚未获取"
+        android:layout_marginTop="2dp"
+        android:ellipsize="none"
+        android:maxLines="2"
+        android:text="宿舍数据未获取"
         android:textColor="#E6FFFFFF"
         android:textSize="11sp" />
 </LinearLayout>

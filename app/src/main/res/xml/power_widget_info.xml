@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  minHeight 给到 56dp：内容高度是 12dp 内边距 ×2 + 24sp 数字行 + 11sp 文案行，
+  给太小会在 2×1 的默认尺寸下被裁掉。
+  targetCellWidth/Height 需要 API 31+，旧系统会忽略；写上是为了在 Android 12+ 上
+  默认就拿到能放下两行文字的尺寸。
+-->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_description"
     android:initialLayout="@layout/widget_power"
-    android:minHeight="40dp"
+    android:minHeight="56dp"
     android:minWidth="110dp"
     android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="2"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />
